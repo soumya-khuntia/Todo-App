@@ -78,7 +78,7 @@ const App = () => {
       <h1 className="text-2xl font-bold mb-4">Stask - Manage your todos</h1>
       <div className="flex mb-4">
         <input type="text" value={inputValue} onChange={handleInputChange} className="px-4 py-2 border border-gray-300 mr-2 rounded-md flex-grow shadow-md" placeholder="Enter your todo..." />
-        <button onClick={handleAddTodo} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add</button>
+        <button onClick={handleAddTodo} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 shadow-md">Add</button>
       </div>
       <div className="mb-4">
         <input type="checkbox" checked={showFinished} onChange={() => setShowFinished(!showFinished)}  className="mr-2 cursor-pointer" />
@@ -86,7 +86,7 @@ const App = () => {
       </div>
       <ul>
         <h2 className="text-lg font-bold">Your todos</h2>
-        {todos.length === 0 && <div className="mx-7">No todos</div>}
+        {todos.length === 0 && <div className="mx-7">No todos...</div>}
         {filteredTodos.map((todo) => (
           <li key={todo.id} className={`flex items-center justify-between mb-2 ${todo.completed ? 'line-through' : ''}`}>
             <input type="checkbox" checked={todo.completed} onChange={() => handleToggleComplete(todo.id)} className="mr-3 cursor-pointer" />
