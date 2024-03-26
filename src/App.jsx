@@ -6,6 +6,8 @@ import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import { v4 as uuidv4 } from 'uuid';
 
+const STORAGE_KEY = 'todos'; // Constant for local storage key
+
 const App = () => {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -15,15 +17,15 @@ const App = () => {
   const [deleteConfirmation, setDeleteConfirmation] = useState(null); // State to track delete confirmation
 
   useEffect(() => {
-    const storedTodos = localStorage.getItem('todos');
+    const storedTodos = localStorage.getItem(STORAGE_KEY);
     if (storedTodos) {
       setTodos(JSON.parse(storedTodos));
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+  const savetols = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+  }
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -33,6 +35,7 @@ const App = () => {
     if (inputValue.trim() !== '') {
       setTodos([...todos, { id: uuidv4(), text: inputValue, completed: false }]);
       setInputValue('');
+      savetols();
     }
   };
 
@@ -41,6 +44,8 @@ const App = () => {
       const newTodos = todos.filter(todo => todo.id !== id);
       setTodos(newTodos);
       setDeleteConfirmation(null);
+      // Update local storage with the filtered todos
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newTodos));
     } else {
       setDeleteConfirmation(id);
     }
@@ -50,6 +55,7 @@ const App = () => {
     const index = todos.findIndex(todo => todo.id === id);
     setEditIndex(index);
     setEditValue(todos[index].text);
+    savetols();
   };
 
   const handleEditChange = (e) => {
@@ -62,6 +68,7 @@ const App = () => {
     newTodos[index].text = editValue;
     setTodos(newTodos);
     setEditIndex(null);
+    savetols();
   };
 
   const handleToggleComplete = (id) => {
@@ -69,6 +76,7 @@ const App = () => {
     const index = newTodos.findIndex(todo => todo.id === id);
     newTodos[index].completed = !newTodos[index].completed;
     setTodos(newTodos);
+    savetols();
   };
 
   const filteredTodos = showFinished ? todos : todos.filter(todo => !todo.completed);
